@@ -49,7 +49,8 @@
 ##-- Python.
 
 def pegpuzzle(start,goal):
-    return reverse(statesearch([start],goal,[]))
+    print(reverse(statesearch([start], goal, [])))
+    return
     
 def statesearch(unexplored,goal,path):
     if unexplored == []:
