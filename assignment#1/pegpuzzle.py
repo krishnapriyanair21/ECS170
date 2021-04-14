@@ -1,4 +1,4 @@
-## pegpuzzle.py
+## pegpuzzle.py (Written by Professor Kurt Eiselt)
 
 ##--
 ##-- NOTE THAT THE COMMENTING DONE BELOW IS NOT HOW WE WANT YOU TO 
@@ -50,7 +50,7 @@
 
 def pegpuzzle(start,goal):
     return reverse(statesearch([start],goal,[]))
-
+    
 def statesearch(unexplored,goal,path):
     if unexplored == []:
         return []
