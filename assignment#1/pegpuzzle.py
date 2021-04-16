@@ -49,8 +49,9 @@
 ##-- Python.
 
 def pegpuzzle(start,goal):
-    print(reverse(statesearch([start], goal, [])))
+    print (reverse(statesearch([start], goal, [])))
     return
+
     
 def statesearch(unexplored,goal,path):
     if unexplored == []:
@@ -215,3 +216,10 @@ def generateNewStates(currState):
 ##-- ['RR_BB', 'R_RBB', 'RBR_B', 'RBRB_', 'RB_BR', '_BRBR', 'B_RBR', 'BBR_R', 'BB_RR']
 
 
+if __name__ == '__main__':
+    import sys
+    start = sys.argv[1]
+    goal = sys.argv[2]
+    pegpuzzle(start, goal)
+
+# to run { py pegpuzzle.py "R_B" "B_R" }
