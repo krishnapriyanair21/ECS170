@@ -155,3 +155,10 @@ if __name__ == '__main__':
     start = sys.argv[1]
     goal = sys.argv[2]
     answer = tilePuzzle(start, goal)
+
+#to run in terminal:
+#start in folder with executable
+
+#py tilepuzzle.py [[0,1,2][3,4,5],[6,7,8]] [[1,2,0][3,4,5],[6,7,8]]
+
+#replace first list with start and second list with goal
