@@ -13,7 +13,7 @@ def tilepuzzle (start, goal):
     for i in range(len(result)):  #make each element of path a list
         new = createList(result[i])
         final.append(new)
-    print(final)
+    return final
 
 #find space element
 def findZero(curr):
