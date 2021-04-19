@@ -1,10 +1,8 @@
-count = 0 # recursion for DFS
+visited = [] # recursion for DFS
 
 def tilePuzzle (start, goal):
     startList = unList(start)
     goalList = unList(goal)
-    
-    #generateNewStates(startList)
 
     # What the output should look like
     result = reverse(statesearch([startList], goalList, []))
@@ -47,9 +45,6 @@ def createList(goal): # https://www.geeksforgeeks.org/python-using-2d-arrays-lis
 
 def swapPositions(curr, pos1, pos2):
     curr = list(curr)
-    # temp = curr[pos1]
-    # curr[pos1] = curr[pos2]
-    # curr[pos2] = temp
     curr[pos1], curr[pos2] = curr[pos2], curr[pos1]
     return ''.join(curr)
 
@@ -57,62 +52,59 @@ def swapPositions(curr, pos1, pos2):
 def slideRight(start, pos):
     if ((pos + 1) % 3 == 0):
         return 
-    print(swapPositions(start, pos, (pos + 1)), " right" )
+    # print(swapPositions(start, pos, (pos + 1)), " right" )
     return swapPositions(start, pos, (pos + 1)) 
 def slideLeft(start, pos):
     if (pos % 3 == 0):
         return 
-    print(swapPositions(start, pos, (pos - 1)), " left" )
+    # print(swapPositions(start, pos, (pos - 1)), " left" )
     return swapPositions(start, pos, (pos - 1)) 
 def slideUp(start, pos):
     if (pos < 3):
         return 
-    print(swapPositions(start, pos, (pos - 3)), " up")
+    # print(swapPositions(start, pos, (pos - 3)), " up")
     return swapPositions(start, pos, (pos - 3)) 
 def slideDown(start, pos):
     if (pos > 5): 
         return
-    print(swapPositions(start, pos, (pos + 3)), " down" )
+    # print(swapPositions(start, pos, (pos + 3)), " down" )
     return swapPositions(start, pos, (pos + 3)) 
 
-def statesearch(unexplored,goal,path):
-    global count
-    count += 1
-    if (count > 4):
-        count-= 1
-        print("too far")
-        return []
+def statesearch(unexplored, goal, path, count = 0):
+    global visited
+    if (count > 15):
+        return [] #what to return
     if unexplored == []:
+        print("unexplored empty")
         return []
     elif goal == head(unexplored):
         print (head(unexplored), " is goal and found")
         return cons(goal,path)
     else:
         newStates = generateNewStates(head(unexplored)) 
-        print(head(unexplored), " is current state")
-        print(path, " is path")
-        print(newStates, " are new states")
+        
+        print(newStates, " are new states before cut")
         #check for repeating states
         for i in newStates:
-            for j in path:
-                if i == j:
-                    print(i, " removed for ", j)
-                    print(path)
-                    newStates.remove(i)
-        result = statesearch(newStates, goal, cons(head(unexplored), path))
+            if i in visited:
+                newStates.remove(i)
+        print(newStates, " are new states after cut")
+        print(path, " is path")
+        visited.append(head(newStates))
+        result = statesearch(newStates, goal, cons(head(unexplored), path), count + 1)
         if result != []:
-            count -= 1
+            print(count, " before decrement")
+            print (path, " path in result != []")
+            count -= 1 #
             return result
         else:
+            print(unexplored, " is uneplxored")
+            print(path, " = path in else")
+            count -= 1
             return statesearch(tail(unexplored),
                                goal,
-                               path)
+                               path, count + 1)
 
-def reverseEach(listOfLists):
-    result = []
-    for st in listOfLists:
-        result.append(reverse(st))
-    return result
 
 def reverse(st):
     return st[::-1]
@@ -125,12 +117,6 @@ def next(lst):
 
 def tail(lst):
     return lst[1:]
-
-def take(n,lst):
-    return lst[0:n]
-
-def drop(n,lst):
-    return lst[n:]
 
 def cons(item,lst):
     return [item] + lst
@@ -162,3 +148,33 @@ if __name__ == '__main__':
 #py tilepuzzle.py [[0,1,2][3,4,5],[6,7,8]] [[1,2,0][3,4,5],[6,7,8]]
 
 #replace first list with start and second list with goal
+
+#test cases from discord (@Lahral) and self
+
+## start = [[0,1,2],[3,4,5],[6,7,8]]
+## goal = [[1,0,2],[3,4,5],[6,7,8]]
+## returns a result in: <1 sec
+
+## start=[[1,2,3],[4,0,5],[6,7,8]]
+## goal=[[4,1,3],[0,2,5],[6,7,8]]
+## returns a result in: takes time
+
+## start=[[1,2,3],[4,0,5],[6,7,8]]
+## goal=[[1,0,3],[4,2,5],[6,7,8]]
+## returns a result in: <1 sec
+
+## start=[[1,2,3],[4,0,5],[6,7,8]]
+## goal=[[1,0,3],[4,7,5],[2,6,8]]
+## returns a result in: takes time
+
+## start=[[2,8,3],[1,0,4],[7,6,5]]
+## goal=[[1,2,3],[8,0,4],[7,6,5]]
+## returns a result in: takes time
+
+## start = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+## goal = [[1, 4, 2], [0, 3, 5], [6, 7, 8]]
+## returns but takes times?
+
+## start=[[0,1,2],[3,4,5],[6,7,8]]
+## goal=[[8,7,6],[5,4,3],[2,1,0]]
+## returns a result in: 
