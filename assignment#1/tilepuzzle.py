@@ -72,6 +72,7 @@ def slideDown(start, pos):
 
 def statesearch(unexplored, goal, path, count = 0):
     global visited
+    visited = []
     if (count > 15): #recursion depth
         return [] #what to return
     if unexplored == []:
