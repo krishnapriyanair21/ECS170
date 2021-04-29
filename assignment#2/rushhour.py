@@ -6,8 +6,11 @@ def rushhour(heuristic, rawInput):
     
     # print("left slide:")
     # printBoard(slideLeft(2,3,rawInput))
-    print("slide up")
-    slideUp(2,1,rawInput)
+    # print("slide up")
+    # slideUp(2,1,rawInput)
+    # printBoard(rawInput)
+    print("slide down")
+    slideDown(2,2,rawInput)
     # if (heuristic == 0):
     #     #send to blocking
     # if (heuristic == 1):
@@ -25,6 +28,8 @@ def swap(curr, pos1, pos2):
 
 #slide one step to the right with the X and Y position of rightmost element
 def slideRight(posX, posY, board):
+    if (posX == 5):
+        return
     rowToChange = board[posY] 
     charLabel = rowToChange[posX]
     for i in range(len(rowToChange)):
@@ -35,6 +40,8 @@ def slideRight(posX, posY, board):
 
 #slide one step to the left with the X and Y position of leftmost element
 def slideLeft(posX, posY, board):
+    if (posX == 0):
+        return
     rowToChange = board[posY] 
     charLabel = rowToChange[posX]
     for i in range(len(rowToChange) - 2, -1, -1): # decrementing loop
@@ -43,23 +50,42 @@ def slideLeft(posX, posY, board):
     board[posY] = rowToChange
     return board
 
+#slide up one step with the X and Y position of uppermost element
 def slideUp(posX, posY, board):
+    if (posY == 0):
+        return
     rowFirstEle = board[posY] 
     charLabel = rowFirstEle[posX]
-    print(charLabel, " is Label")
     for i in range(6):
-        temp = board[i]
-        if (temp[posX] == charLabel):
-            swapUp = board[i - 1]
+        searchString = list(board[i])
+        if (searchString[posX] == charLabel):
+            swapUp = list(board[i - 1])
+            searchString[posX] = swapUp[posX]
             swapUp[posX] = charLabel
-            temp[posX] = "-" 
-            board[i - 1] = swapUp
-            board[i] = temp
-        printBoard(board)  
-        print(i, " was above")         
-    return 
+            swapUpStr = ''.join(swapUp)
+            searchStringtoStr = ''.join(searchString)
+            board[i - 1] = swapUpStr
+            board[i] = searchStringtoStr
+    return board
 
 def slideDown(posX, posY, board):
-    return 
+    if (posY == 5):
+        return
+    rowFirstEle = board[posY] 
+    charLabel = rowFirstEle[posX]
+    for i in range(5, 0, -1):
+        searchString = list(board[i])
+        if (searchString[posX] == charLabel):
+            print( i , " found ", charLabel)
+            swapDown = list(board[i + 1])
+            searchString[posX] = swapDown[posX]
+            swapDown[posX] = charLabel
+            swapDownStr = ''.join(swapDown)
+            searchStringtoStr = ''.join(searchString)
+            board[i + 1] = swapDownStr
+            board[i] = searchStringtoStr
+        print ( "level ", i)
+        printBoard(board)
+    return board 
 
 # calculate h(n) for blocking
