@@ -1,16 +1,21 @@
 # input is a list of strings
-def rushhour(heuristic, rawInput):
-    printBoard(rawInput)
+def rushhour(heuristic, board):
+    printBoard(board)
+
+    ## Slide Tests
     # print("right slide:")
-    # printBoard(slideRight(2,3,rawInput))
-    
+    # printBoard(slideRight(2,3,board))
     # print("left slide:")
-    # printBoard(slideLeft(2,3,rawInput))
+    # printBoard(slideLeft(2,3,board))
     # print("slide up")
-    # slideUp(2,1,rawInput)
-    # printBoard(rawInput)
-    print("slide down")
-    slideDown(2,2,rawInput)
+    # slideUp(3,1,board)
+    # printBoard(board)
+    # print("slide down")
+    # slideDown(2,2,board)
+
+    ## Heuristic tests
+    blockingHeuristic(board)
+    selfMadeHeuristic(board)
     # if (heuristic == 0):
     #     #send to blocking
     # if (heuristic == 1):
@@ -68,6 +73,7 @@ def slideUp(posX, posY, board):
             board[i] = searchStringtoStr
     return board
 
+#slide down one step with the X and Y position of lowermost element
 def slideDown(posX, posY, board):
     if (posY == 5):
         return
@@ -76,7 +82,6 @@ def slideDown(posX, posY, board):
     for i in range(5, 0, -1):
         searchString = list(board[i])
         if (searchString[posX] == charLabel):
-            print( i , " found ", charLabel)
             swapDown = list(board[i + 1])
             searchString[posX] = swapDown[posX]
             swapDown[posX] = charLabel
@@ -84,8 +89,65 @@ def slideDown(posX, posY, board):
             searchStringtoStr = ''.join(searchString)
             board[i + 1] = swapDownStr
             board[i] = searchStringtoStr
-        print ( "level ", i)
-        printBoard(board)
     return board 
 
-# calculate h(n) for blocking
+#counts the number of different chars != X in row 3 starting from first X
+def blockingHeuristic(board):
+    traverseXRow = list(board[2])
+    blocksInRow = []
+    blocksCounter = 0
+    whereIsX = 0
+
+    for j in range(6):
+        if (traverseXRow[j] == 'X'):
+            whereIsX = j
+            break
+    for i in range(j , 6):
+        if (traverseXRow[i] != 'X'):
+            if (traverseXRow[i] != '-'):
+                if (traverseXRow[i] not in blocksInRow):
+                    blocksInRow.append(traverseXRow[i])
+                    blocksCounter += 1
+    if ('-' in blocksInRow): 
+        blocksCounter -= 1
+    
+    if (blocksCounter == 0): # check to reach goal
+        return 0 ## h(n) = 0
+    else:
+        return (blocksCounter + 1) ## one plus the number of cars
+
+
+# counts the number of blocks in front of X and the number of steps X has to take to reach the end
+# if we've reached goal state h(n) = 0
+# This heuristic is similar to the blocking heuristic but also takes into account the number of final steps needed
+# Because these steps would have to be taken into account for the blocking heuristic and the blocking heuristic is admissable
+# this heurisitic must be admissable as well 
+def selfMadeHeuristic(board):
+    traverseXRow = list(board[2])
+    blocksInRow = []
+    blocksCounter = 0
+    whereIsX = 0
+    XToGoal = 0
+
+    for j in range(6):
+        if (traverseXRow[j] == 'X'):
+            whereIsX = j
+            break
+    for i in range(j , 6):
+        if (traverseXRow[i] != 'X'):
+            if (traverseXRow[i] != '-'):
+                if (traverseXRow[i] not in blocksInRow):
+                    blocksInRow.append(traverseXRow[i])
+                    blocksCounter += 1
+    if ('-' in blocksInRow): 
+        blocksCounter -= 1
+    
+    #define return value
+    XToGoal = (6 - j - 2) # 6-j is first X and there are 2 extra spots
+    print(XToGoal, " is number of steps from goal")
+    h = XToGoal + blocksCounter + 1 ## one plus the number of cars plus how many moves until exit
+    print(h, " steps until goal")
+    if (blocksCounter == 0):
+        return 0 ## h(n) = 0
+    else:
+        return h 
