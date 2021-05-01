@@ -151,3 +151,26 @@ def selfMadeHeuristic(board):
         return 0 ## h(n) = 0
     else:
         return h 
+
+def AStarSearch(board):
+    stateExploredCounter = 0
+
+    open = []
+    closed = []
+    #make tuple with board and f(n)
+    while(open != []):
+        # currExploring = pop open
+        # put currExploring in closed
+        # if currExploring is goal state Return path
+            # reverse from current to start
+        # loop next states
+            # expand all possible states from currExploring (IN NEW VARS)
+            # if in closed continue
+            # ELSE
+                # generate heuristic
+                # place next states from currExploring in open 
+            #increment stateExploredCounter
+        #sort open by f(n)
+
+        if(GOAL in closed):
+            break
