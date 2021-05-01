@@ -142,13 +142,12 @@ def selfMadeHeuristic(board):
     
     #define return value
     XToGoal = (6 - j - 2) # 6-j is first X and there are 2 extra spots
-    print(XToGoal, " is number of steps from goal")
     h = XToGoal + blocksCounter + 1 ## one plus the number of cars plus how many moves until exit
-    print(h, " steps until goal")
     if (blocksCounter == 0):
         return 0 ## h(n) = 0
     else:
         return h 
+
 def caculateFn(heurisitic, currBoard, g):
     f = 0
     if (heuristic == 0):
