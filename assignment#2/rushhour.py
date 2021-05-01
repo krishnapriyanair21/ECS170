@@ -16,10 +16,6 @@ def rushhour(heuristic, board):
     ## Heuristic tests
     blockingHeuristic(board)
     selfMadeHeuristic(board)
-    # if (heuristic == 0):
-    #     #send to blocking
-    # if (heuristic == 1):
-    #     #send to selfmade
 
 def printBoard(board):
     for i in board:
@@ -67,6 +63,7 @@ def slideUp(posX, posY, board):
             swapUp = list(board[i - 1])
             searchString[posX] = swapUp[posX]
             swapUp[posX] = charLabel
+            #revert to string to place in board
             swapUpStr = ''.join(swapUp)
             searchStringtoStr = ''.join(searchString)
             board[i - 1] = swapUpStr
@@ -85,6 +82,7 @@ def slideDown(posX, posY, board):
             swapDown = list(board[i + 1])
             searchString[posX] = swapDown[posX]
             swapDown[posX] = charLabel
+            #revert to strings to place in board
             swapDownStr = ''.join(swapDown)
             searchStringtoStr = ''.join(searchString)
             board[i + 1] = swapDownStr
@@ -151,13 +149,20 @@ def selfMadeHeuristic(board):
         return 0 ## h(n) = 0
     else:
         return h 
+def caculateFn(heurisitic, currBoard, g):
+    f = 0
+    if (heuristic == 0):
+        f = blockingHeuristic(currBoard) + g 
+    if (heuristic == 1):
+        f = selfMadeHeuristic(currBoard) + g
+    return f
 
-def AStarSearch(board):
+def AStarSearch(heurisitic, board):
     stateExploredCounter = 0
-
+    #make tuple with board and f(n)
+    #place in open 
     open = []
     closed = []
-    #make tuple with board and f(n)
     while(open != []):
         # currExploring = pop open
         # put currExploring in closed
