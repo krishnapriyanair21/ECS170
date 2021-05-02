@@ -13,9 +13,10 @@ class Node(object):
         else:
             return false
        
-    
+
 def rushhour(heurisitic, rawInput):
-    path = AStarSearch(heurisitic, board)
+    numberOfCarsAndTrucks(rawInput)
+    # path = AStarSearch(heurisitic, board)
     #print result here
     
 def caculateFn(heurisitic, currBoard, g):
@@ -35,6 +36,22 @@ def swap(curr, pos1, pos2):
     curr[pos1], curr[pos2] = curr[pos2], curr[pos1]
     print(curr)
     return ''.join(curr)
+
+def numberOfCarsAndTrucks(board):
+    obstacles = []
+    for i in range(6):
+        currRow = board[i]
+        for j in range(6):
+            print(currRow[j], " is currRow[j]")
+            if (currRow[j] != 'X' and currRow[j] != '-'):
+                if (currRow[j] not in obstacles):
+                    obstacles.append(currRow[j])
+    numberOfObstacles = len(obstacles)
+    
+                
+    # find number of cars
+    # find which cars can move
+    # generate states for moveable cars
 
 #counts the number of different chars != X in row 3 starting from first X
 def blockingHeuristic(board):
@@ -101,7 +118,7 @@ def AStarSearch(heurisitic, board):
     currExploring = Node(board, None, f)
     open = [currExploring]
     closed = []
-    while(open != []):
+    #while(open != []):
         # currExploring = pop open
         # put currExploring in closed
         # if currExploring is goal state Return path

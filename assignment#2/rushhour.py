@@ -3,10 +3,23 @@ def rushhour(heuristic, board):
     printBoard(board)
 
     ## Slide Tests
-    # print("right slide:")
-    # printBoard(slideRight(2,3,board))
-    # print("left slide:")
-    # printBoard(slideLeft(2,3,board))
+    print("right slide:")
+    
+    newBoard = slideRight(3,4,board)
+    if (newBoard):
+        printBoard(newBoard)
+    else:
+        print("none")
+    print("above is returned board")
+    printBoard(board)
+    print("above is raw input")
+    print("left slide:")
+    newBoard = slideLeft(2,4,board)
+    if (newBoard):
+        printBoard(newBoard)
+    else:
+        print("none")
+    print("above is returned board")
     # print("slide up")
     # slideUp(3,1,board)
     # printBoard(board)
@@ -29,65 +42,81 @@ def swap(curr, pos1, pos2):
 
 #slide one step to the right with the X and Y position of rightmost element
 def slideRight(posX, posY, board):
-    if (posX == 5):
-        return
-    rowToChange = board[posY] 
-    charLabel = rowToChange[posX]
-    for i in range(len(rowToChange)):
-        if (rowToChange[i] == charLabel):
-            rowToChange = swap(rowToChange, i - 1, i)
-    board[posY] = rowToChange
-    return board
-
-#slide one step to the left with the X and Y position of leftmost element
-def slideLeft(posX, posY, board):
+    currBoard = board.copy()
     if (posX == 0):
-        return
-    rowToChange = board[posY] 
+        return None
+    rowToChange = currBoard[posY] 
     charLabel = rowToChange[posX]
+    if(rowToChange[posX - 1] != charLabel):
+        return None
     for i in range(len(rowToChange) - 2, -1, -1): # decrementing loop
         if (rowToChange[i] == charLabel):
             rowToChange = swap(rowToChange, i, i + 1)
-    board[posY] = rowToChange
-    return board
+    currBoard[posY] = rowToChange
+    return currBoard
+
+#slide one step to the left with the X and Y position of leftmost element
+def slideLeft(posX, posY, board):
+    currBoard = board.copy()
+    if (posX == 5):
+        return None
+    rowToChange = currBoard[posY] 
+    charLabel = rowToChange[posX]
+    print(charLabel, " is label")
+    if(rowToChange[posX + 1] != charLabel):
+        return None
+    for i in range(len(rowToChange)):
+        if (rowToChange[i] == charLabel):
+            rowToChange = swap(rowToChange, i - 1, i)
+    currBoard[posY] = rowToChange
+    return currBoard
+
 
 #slide up one step with the X and Y position of uppermost element
 def slideUp(posX, posY, board):
+    currBoard = board.copy()
     if (posY == 0):
         return
-    rowFirstEle = board[posY] 
+    rowFirstEle = currBoard[posY] 
     charLabel = rowFirstEle[posX]
+    #error handling
+    if (currBoard[posY + 1][posX] != charLabel):
+        return None
     for i in range(6):
-        searchString = list(board[i])
+        searchString = list(currBoard[i])
         if (searchString[posX] == charLabel):
-            swapUp = list(board[i - 1])
+            swapUp = list(currBoard[i - 1])
             searchString[posX] = swapUp[posX]
             swapUp[posX] = charLabel
-            #revert to string to place in board
+            #revert to string to place in currBoard
             swapUpStr = ''.join(swapUp)
             searchStringtoStr = ''.join(searchString)
-            board[i - 1] = swapUpStr
-            board[i] = searchStringtoStr
-    return board
+            currBoard[i - 1] = swapUpStr
+            currBoard[i] = searchStringtoStr
+    return currBoard
 
 #slide down one step with the X and Y position of lowermost element
 def slideDown(posX, posY, board):
+    currBoard = board.copy()
     if (posY == 5):
         return
-    rowFirstEle = board[posY] 
+    rowFirstEle = currBoard[posY] 
     charLabel = rowFirstEle[posX]
+    #error handling
+    if (currBoard[posY - 1][posX] != charLabel):
+        return None
     for i in range(5, 0, -1):
-        searchString = list(board[i])
+        searchString = list(currBoard[i])
         if (searchString[posX] == charLabel):
-            swapDown = list(board[i + 1])
+            swapDown = list(currBoard[i + 1])
             searchString[posX] = swapDown[posX]
             swapDown[posX] = charLabel
-            #revert to strings to place in board
+            #revert to strings to place in currBoard
             swapDownStr = ''.join(swapDown)
             searchStringtoStr = ''.join(searchString)
-            board[i + 1] = swapDownStr
-            board[i] = searchStringtoStr
-    return board 
+            currBoard[i + 1] = swapDownStr
+            currBoard[i] = searchStringtoStr
+    return currBoard 
 
 #counts the number of different chars != X in row 3 starting from first X
 def blockingHeuristic(board):
