@@ -5,8 +5,8 @@ class Node(object):
         self.prev = prev
         self.f = f
 
-    def goalStateFound(board):
-        row3 = list(board[2])
+    def goalStateFound(self):
+        row3 = list(self.board[2])
         if (row3[4] == row3[5]):
             if (row3[4] == 'X'):
                 return True
@@ -120,9 +120,13 @@ def AStarSearch(heuristic, board):
     open = [currExploring]
     closed = []
     print(open[0].f)
-    #while(open != []):
-        # currExploring = pop open
+    while(open != []):
+        print(currLevel, "level counter")
+        currExploring = open.pop(0)
         # put currExploring in closed
+        closed.append(currExploring)
+        if(currExploring.goalStateFound()):
+            print("GOOOOOOOOOOOOOOOOOOOOAAAAAAAAAAALLLLLLLLLLLLL")
         # if currExploring is goal state Return path
             # reverse from current to start
         # loop next states
@@ -133,4 +137,5 @@ def AStarSearch(heuristic, board):
                 # place next states from currExploring in open 
             #increment stateExploredCounter
         #sort open by f(n)
+        currLevel += 1
     return ## path
