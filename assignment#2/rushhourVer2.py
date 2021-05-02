@@ -22,7 +22,7 @@ def rushhour(heuristic, rawInput):
         for i in range(len(path)):
             printBoard(path[i])
             print("\n")
-        print("Total Moves: ", len(path))
+        print("Total Moves: ", len(path) - 1) # initial state does not count 
         print("Total States Explored: ", totalStatesExplored )
     else:
         print("could not find solution")
@@ -57,11 +57,16 @@ def AStarSearch(heuristic, board):
         else:
             newStates = generateNewStates(currExploring, heuristic, currLevel)
             for i in range(len(newStates)):
-                if (newStates[i] not in closed):
-                    if(newStates[i].board in sublist for sublist in open):
-                        continue
-                    else:
-                        open.append(newStates[i])
+                inClosed = False
+                inOpen = False
+                for j in range(len(closed)):
+                    if (newStates[i].board == closed[j].board):
+                        inClosed = True
+                for k in range(len(open)):
+                    if(newStates[i].board == open[k].board):
+                        inOpen = True
+                if (not inClosed and not inOpen):
+                    open.append(newStates[i])
         #sort open by f(n)
         for i in range(len(open)):
             open.sort(key = sendKeyToSort)
