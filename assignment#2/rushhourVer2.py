@@ -14,18 +14,18 @@ class Node(object):
             return false
        
 
-def rushhour(heurisitic, rawInput):
-    numberOfCarsAndTrucks(rawInput)
-    # path = AStarSearch(heurisitic, board)
+def rushhour(heuristic, rawInput):
+    # numberOfCarsAndTrucks(rawInput)
+    AStarSearch(heuristic, rawInput)
     #print result here
     
-def caculateFn(heurisitic, currBoard, g):
-        f = 0
-        if (heuristic == 0):
-            f = blockingHeuristic(currBoard) + g 
-        if (heuristic == 1):
-            f = selfMadeHeuristic(currBoard) + g
-        return f 
+def caculateFn(heuristic, currBoard, g):
+    f = 0
+    if (heuristic == 0):
+        f = blockingHeuristic(currBoard) + g 
+    if (heuristic == 1):
+        f = selfMadeHeuristic(currBoard) + g
+    return f 
 
 def printBoard(self):
         for i in board:
@@ -39,15 +39,16 @@ def swap(curr, pos1, pos2):
 
 def numberOfCarsAndTrucks(board):
     obstacles = []
+    moveableObstacles = []
     for i in range(6):
         currRow = board[i]
         for j in range(6):
             print(currRow[j], " is currRow[j]")
             if (currRow[j] != 'X' and currRow[j] != '-'):
                 if (currRow[j] not in obstacles):
-                    obstacles.append(currRow[j])
+                    obstacles.append(currRow[j]) 
     numberOfObstacles = len(obstacles)
-    
+
                 
     # find number of cars
     # find which cars can move
@@ -82,7 +83,7 @@ def blockingHeuristic(board):
 # if we've reached goal state h(n) = 0
 # This heuristic is similar to the blocking heuristic but also takes into account the number of final steps needed
 # Because these steps would have to be taken into account for the blocking heuristic and the blocking heuristic is admissable
-# this heurisitic must be admissable as well 
+# this heuristic must be admissable as well 
 def selfMadeHeuristic(board):
     traverseXRow = list(board[2])
     blocksInRow = []
@@ -111,13 +112,14 @@ def selfMadeHeuristic(board):
     else:
         return h 
 
-def AStarSearch(heurisitic, board):
+def AStarSearch(heuristic, board):
     stateExploredCounter = 0
     currLevel = 0
-    f = caculateFn(heurisitic, board, currLevel)
+    f = caculateFn(heuristic, board, currLevel)
     currExploring = Node(board, None, f)
     open = [currExploring]
     closed = []
+    print(open[0].f)
     #while(open != []):
         # currExploring = pop open
         # put currExploring in closed
@@ -131,3 +133,4 @@ def AStarSearch(heurisitic, board):
                 # place next states from currExploring in open 
             #increment stateExploredCounter
         #sort open by f(n)
+    return ## path
