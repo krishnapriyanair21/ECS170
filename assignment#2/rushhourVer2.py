@@ -91,9 +91,9 @@ def generateNewStates(board,heurisitic,g):
     allStates = horizontalStates + verticalStates
     for i in range(len(allStates)):
         newStates.append(createNode(allStates[i],heurisitic,g,board)) 
-    newStates.sort(f)
     return newStates
 
+#formating for open and closed in AStar
 def createNode(state, heuristic, g, prev):
     f = caculateFn(heuristic, state, g)
     valToReturn = Node(state,prev,f)
