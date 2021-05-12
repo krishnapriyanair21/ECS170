@@ -1,4 +1,5 @@
 def hexapawn(board, boardSize, player, searchAhead):
+    init = hexapawnGame(board, boardSize, player, searchAhead)
     return
 
 class hexapawnGame(object):
@@ -8,8 +9,28 @@ class hexapawnGame(object):
         self.player = player
         self.searchAhead = searchAhead
     #board evaluation in class 
+    def staticEval(self):
+        # loop through board
+            # count black and white pieces
+        
+        return score
 
 # move generator
 
 #minimax search
+
+def whiteMoveDown(currGame):
+    board = (currGame.board).copy()
+
+    # find char to move copy board
+    return
+
+def blackMoveUp():
+    return
+
+def whiteDiagonal():
+    return
+
+def blackDiagonal():
+    return
 
