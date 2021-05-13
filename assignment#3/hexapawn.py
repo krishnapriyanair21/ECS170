@@ -24,6 +24,14 @@ class hexapawnGame(object):
         self.score = None
     #board evaluation in class 
     def staticEval(self):
+        rowOne = list(self.board[0])
+        rowThree = list(self.board[2])
+        for i in range(3):
+            if rowOne[i] = 'b':
+                return #BLACK WINS
+        for i in range(3):
+            if rowThree[i] = 'w':
+                return #WHITE WINS
         # loop through board
             # count black and white pieces
         
