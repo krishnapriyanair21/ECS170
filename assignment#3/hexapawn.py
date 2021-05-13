@@ -7,13 +7,14 @@ def hexapawn(board, boardSize, player, searchAhead):
     # check = whiteDiagonalRight(init, 2, 1)
     # check = blackDiagonalLeft(init, 0, 0)
     print("initial board: ")
-    print(init.board)
-    print("new board: ")
-    if (check):
-        print(check)
-    else:
-        print("HAHA NOPE")
-    return
+    init.printBoard()
+    init.staticEval()
+    # print("new board: ")
+    # if (check):
+    #     print(check)
+    # else:
+    #     print("HAHA NOPE")
+    # return
 
 class hexapawnGame(object):
     def __init__(self, board, size, player, searchAhead):
@@ -24,20 +25,28 @@ class hexapawnGame(object):
         self.score = None
     #board evaluation in class 
     def staticEval(self):
+        score = 0
         rowOne = list(self.board[0])
         rowThree = list(self.board[2])
         for i in range(3):
-            if rowOne[i] = 'b':
+            if rowOne[i] == 'b':
+                print("black wins")
                 return #BLACK WINS
         for i in range(3):
-            if rowThree[i] = 'w':
+            if rowThree[i] == 'w':
+                print("white wins")
                 return #WHITE WINS
         # loop through board
             # count black and white pieces
         
         # set self.score = score and return it 
         return score
-
+    def printBoard(self):
+        # for visual/debugging purposes
+        print("current player: ", self.player)
+        size = self.size
+        for i in range(size):
+            print(self.board[i])
 # move generator
 
 #minimax search
