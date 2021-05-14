@@ -1,6 +1,11 @@
+## Defaults to white plays first
+
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
-    moveGenerator(init)
+    head = MinMaxTree(init)
+    head.setMinOrMax()
+    bestChoice = minMaxSearch(head)
+    return bestChoice.game.board
 
 class MinMaxTree(object):
     def __init__(self, game):
@@ -22,6 +27,8 @@ class MinMaxTree(object):
                 self.level = 'MAX'
         else: # first level is None -> auto set to MAX
             self.level = 'MAX'
+
+        
 class hexapawnGame(object):
     def __init__(self, board, size, player, searchAhead):
         self.board = board
@@ -29,8 +36,8 @@ class hexapawnGame(object):
         self.player = player
         self.searchAhead = searchAhead
         self.score = self.staticEval()
-        self.curr = player
-
+        self.curr = 'w'
+        
     # static evaluation function which sets score for hexapawn game object
     # +(size * 5) if current player wins
     # -(size * 5) if opponent wins
@@ -87,34 +94,50 @@ def moveGenerator(currGame):
         black = findWhiteAndBlack(currGame, 'black')
         possibleStates = blackStates(black,currGame)
 
-    #For debugging
-    for i in range(len(possibleStates)):
-        print("board", i, ": ")
-        possibleStates[i].printBoard()
-        print("score: ", possibleStates[i].score)
+    # # For debugging
+    # for i in range(len(possibleStates)):
+    #     print("board", i, ": ")
+    #     possibleStates[i].printBoard()
     return possibleStates ## FIX THIS
 
 
 #minimax search
-def minMaxSearch(currGame):
-    head = MinMaxTree(currGame)
-    for i in range(currGame.searchAhead):
-        newLevel = moveGenerator(currGame)
-        for j in range(newLevel):
-        
-    ## create first head
-    ## loop through as many states to search ahead
-        ## find all possible children of current head
-        ## loop through each possible child
-            ## create new minmaxtree obj 
-            ## set parent to head (parent.addChild)
-            ## setMinorMax
-        ## set head to next element in tree
+def minMaxSearch(headNode):
+    head = createMinMaxTree(headNode)
+    head.game.printBoard()
+    print(head.game.searchAhead, "is search")
+    ## Needs to be done on return after entire tree is found
+    print("in else", head.level, "is head")
+    if(head.level == 'MAX'):
+        maxVal = head.game.size*(-5)
+        maxGame = head.children[0]
+        for i in range(len(head.children)):
+            if (head.children[i].game.score > maxVal):
+                maxGame = head.children[i]
+        return maxGame
+    if(head.level == 'MIN'):
+        minVal = head.game.size*(5)
+        minGame = head.children[0]
+        for i in range(len(head.children)):
+            if(head.children[i].game.score < minVal):
+                minGame = head.children[i]
+        return minGame
 
-
-
-    return
-
+def createMinMaxTree(head):
+    if(head.game.searchAhead > 0):
+        print("current head:", head.level)
+        nextLevel = moveGenerator(head.game)
+        for i in range(len(nextLevel)):
+            next = MinMaxTree(nextLevel[i])
+            head.addChild(next)
+            next.setMinOrMax()
+            next.game.searchAhead = head.game.searchAhead - 1
+        print("children at this level", len(head.children))
+        for j in range(len(head.children)):
+            minMaxSearch(head.children[j])
+    elif (head.game.searchAhead == 0):
+        return
+    return head
 # Finds all states for white player
 # creates hexapawn object with new board and sets current (next) player to b
 # returns list of possible states
