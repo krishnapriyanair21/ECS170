@@ -7,13 +7,14 @@ class MinMaxTree(object):
         self.game = game ## game should be hexapawn object
         self.parent = None
         self.children = []
-        self.level = self.minOrMax()
+        self.level = None
     
     # Sample found on stack overflow: https://stackoverflow.com/questions/1925246/declaring-empty-class-member-in-python
     def addChild(self, child):
         self.children.append(child)
         child.parent = self
-    def minOrMax(self):
+    
+    def setMinOrMax(self):
         if (self.parent):
             if(self.parent.level == 'MAX'):
                 self.level = 'MIN'
@@ -86,14 +87,34 @@ def moveGenerator(currGame):
         black = findWhiteAndBlack(currGame, 'black')
         possibleStates = blackStates(black,currGame)
 
+    #For debugging
     for i in range(len(possibleStates)):
         print("board", i, ": ")
         possibleStates[i].printBoard()
         print("score: ", possibleStates[i].score)
     return possibleStates ## FIX THIS
+
+
 #minimax search
-def minMaxSearch():
+def minMaxSearch(currGame):
+    head = MinMaxTree(currGame)
+    for i in range(currGame.searchAhead):
+        newLevel = moveGenerator(currGame)
+        for j in range(newLevel):
+        
+    ## create first head
+    ## loop through as many states to search ahead
+        ## find all possible children of current head
+        ## loop through each possible child
+            ## create new minmaxtree obj 
+            ## set parent to head (parent.addChild)
+            ## setMinorMax
+        ## set head to next element in tree
+
+
+
     return
+
 # Finds all states for white player
 # creates hexapawn object with new board and sets current (next) player to b
 # returns list of possible states
