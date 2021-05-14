@@ -9,13 +9,15 @@ def hexapawn(board, boardSize, player, searchAhead):
     # check.board = blackDiagonalLeft(init, 1, 2)
     print("initial board: ")
     init.printBoard()
-    init.staticEval()
-    print("new board: ")
-    if (check.board):
-        check.printBoard()
-    else:
-        print("HAHA NOPE")
-    return
+    print(init.staticEval())
+    if (init.score > 0):
+        print("score greater than 0")
+    # print("new board: ")
+    # if (check.board):
+    #     check.printBoard()
+    # else:
+    #     print("HAHA NOPE")
+    # return
 
 class hexapawnGame(object):
     def __init__(self, board, size, player, searchAhead):
@@ -23,40 +25,54 @@ class hexapawnGame(object):
         self.size = size
         self.player = player
         self.searchAhead = searchAhead
-        self.score = None
-    #board evaluation in class 
+        self.score = self.staticEval()
+
     def staticEval(self):
-        score = 0
         blackMarkers = 0
         whiteMarkers = 0
+        whiteLose = False
+        blackLose = False
         rowOne = list(self.board[0])
         rowThree = list(self.board[2])
         for i in range(3):
             if rowOne[i] == 'b':
                 print("black wins")
-                return #BLACK WINS
+                whiteLose = True #BLACK WINS
         for i in range(3):
             if rowThree[i] == 'w':
                 print("white wins")
-                return #WHITE WINS
-        # loop through board
-            # count black and white pieces
+                blackLose = True #WHITE WINS
+        # loop through board and count pieces
         for i in range(self.size):
             for j in range(self.size):
                 if (self.board[i][j] == 'b'):
                     blackMarkers += 1
                 if (self.board[i][j] == 'w'):
                     whiteMarkers += 1
-        print("White count: ", whiteMarkers)
-        print("Black count: ", blackMarkers)
+        if (self.player == 'w'):
+            if(whiteLose):
+                self.score = -10
+            elif (blackLose):
+                self.score =  10
+            else:
+                self.score = int(whiteMarkers - blackMarkers)
+        else:
+            if (blackLose):
+                self.score =  -10
+            elif (whiteLose):
+                self.score =  10
+            else:
+                self.score = int(blackMarkers - whiteMarkers)
         # set self.score = score and return it 
-        return score
+        print(self.score , " is score in static eval")
+        return self.score
     def printBoard(self):
         # for visual/debugging purposes
         print("current player: ", self.player)
         size = self.size
         for i in range(size):
             print(self.board[i])
+    
 # move generator
 
 #minimax search
