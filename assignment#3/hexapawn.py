@@ -1,6 +1,6 @@
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
-    check = hexapawnGame(board,boardSize,player,searchAhead)
+    # check = hexapawnGame(board,boardSize,player,searchAhead)
     #check = whiteMoveDown(init, 0, 0)
     # check = blackMoveUp(init, 2, 2)
     # check.board = blackDiagonalRight(init, 1, 2)
@@ -19,6 +19,16 @@ def hexapawn(board, boardSize, player, searchAhead):
     #     print("HAHA NOPE")
     # return
 
+class MinMaxTree(object):
+    def __init__(self, game):
+        self.game = game ## game should be hexapawn object
+        self.parent = None
+        self.children = []
+    
+    # Sample found on stack overflow: https://stackoverflow.com/questions/1925246/declaring-empty-class-member-in-python
+    def addChild(self, child):
+        self.children.append(child)
+        child.parent = self
 class hexapawnGame(object):
     def __init__(self, board, size, player, searchAhead):
         self.board = board
