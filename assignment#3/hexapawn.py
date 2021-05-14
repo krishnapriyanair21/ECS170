@@ -1,5 +1,6 @@
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
+    moveGenerator(init)
     # check = hexapawnGame(board,boardSize,player,searchAhead)
     #check = whiteMoveDown(init, 0, 0)
     # check = blackMoveUp(init, 2, 2)
@@ -7,12 +8,12 @@ def hexapawn(board, boardSize, player, searchAhead):
     # check.board = whiteDiagonalLeft(init, 2, 1)
     # check.board = whiteDiagonalRight(init, 0, 1)
     # check.board = blackDiagonalLeft(init, 1, 2)
-    print("initial board: ")
-    init.printBoard()
-    print(init.staticEval())
-    if (init.score > 0):
-        print("score greater than 0")
-    # print("new board: ")
+    # print("initial board: ")
+    # init.printBoard()
+    # print(init.staticEval())
+    # if (init.score > 0):
+    #     print("score greater than 0")
+    # # print("new board: ")
     # if (check.board):
     #     check.printBoard()
     # else:
@@ -36,6 +37,7 @@ class hexapawnGame(object):
         self.player = player
         self.searchAhead = searchAhead
         self.score = self.staticEval()
+        self.curr = player
 
     # static evaluation function which sets score for hexapawn game object
     # +10 if current player wins
@@ -88,7 +90,13 @@ class hexapawnGame(object):
             print(self.board[i])
     
 # move generator
-
+def moveGenerator(currGame):
+    if (currGame.curr == 'w'):
+        
+        currGame.curr = 'b'
+    else:
+        currGame.curr = 'w'
+    return []
 #minimax search
 
 
