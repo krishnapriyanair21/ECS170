@@ -27,6 +27,10 @@ class hexapawnGame(object):
         self.searchAhead = searchAhead
         self.score = self.staticEval()
 
+    # static evaluation function which sets score for hexapawn game object
+    # +10 if current player wins
+    # -10 if opponent wins
+    # else score is current player markers - opponent player markers
     def staticEval(self):
         blackMarkers = 0
         whiteMarkers = 0
@@ -77,6 +81,9 @@ class hexapawnGame(object):
 
 #minimax search
 
+
+## MOVEMENT FUNCTIONS: WHITE UP/RIGHT DIAGONAL/LEFT DIAGONAL
+## MOVEMENT FUNCTIONS: BLACK DOWN/RIGHT DIAGONAL/LEFT DIAGONAL
 def whiteMoveDown(currGame, posX, posY):
     board = (currGame.board).copy()
     # check that position is w
@@ -97,30 +104,6 @@ def whiteMoveDown(currGame, posX, posY):
         # replace in board
         board[posY] = changeToDashStr
         board[posY + 1] = changeToCharStr
-    else:
-        return None
-    return board
-
-def blackMoveUp(currGame, posX, posY):
-    board = (currGame.board).copy()
-    # check that position is b
-    if(board[posY][posX] != 'b'):
-        print("Bad coordinates")
-        return None
-    # check if move possible
-    if (board[posY - 1][posX] == '-'):
-        # change current position to '-'
-        changeToDash = list(board[posY]) 
-        changeToDash[posX]= '-'
-        # 'move' white down
-        changeToChar = list(board[posY - 1])
-        changeToChar[posX] = 'b'
-        # convert to string
-        changeToCharStr = ''.join(changeToChar)
-        changeToDashStr = ''.join(changeToDash)
-        # replace in board
-        board[posY] = changeToDashStr
-        board[posY - 1] = changeToCharStr
     else:
         return None
     return board
@@ -175,6 +158,30 @@ def whiteDiagonalLeft(currGame, posX, posY):
         print("WhiteLeftDiagonal is not black")
         return None
 
+def blackMoveUp(currGame, posX, posY):
+    board = (currGame.board).copy()
+    # check that position is b
+    if(board[posY][posX] != 'b'):
+        print("Bad coordinates")
+        return None
+    # check if move possible
+    if (board[posY - 1][posX] == '-'):
+        # change current position to '-'
+        changeToDash = list(board[posY]) 
+        changeToDash[posX]= '-'
+        # 'move' white down
+        changeToChar = list(board[posY - 1])
+        changeToChar[posX] = 'b'
+        # convert to string
+        changeToCharStr = ''.join(changeToChar)
+        changeToDashStr = ''.join(changeToDash)
+        # replace in board
+        board[posY] = changeToDashStr
+        board[posY - 1] = changeToCharStr
+    else:
+        return None
+    return board
+
 def blackDiagonalRight(currGame, posX, posY):
     board = (currGame.board).copy()
     # check if curr piece is b
@@ -224,4 +231,3 @@ def blackDiagonalLeft(currGame, posX, posY):
     else: 
         print("Black Left Diagonal is not white")
         return None
-    return board
