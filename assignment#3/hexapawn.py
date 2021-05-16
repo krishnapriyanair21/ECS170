@@ -1,14 +1,17 @@
 ## Defaults to white plays first
 ## How to check for stalemate 
 # stop minmax search if no children at current node
+# CLEAR CHECK NOT WORKING 
+# WRITE IT OUT
 
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
-    head = MinMaxTree(init)
-    head.setMinOrMax()
-    headNode = createMinMaxTree(head)
-    bestChoice = minMaxSearch(headNode, searchAhead)
-    return bestChoice.game.board
+    init.printBoard()
+    # head = MinMaxTree(init)
+    # head.setMinOrMax()
+    # headNode = createMinMaxTree(head)
+    # bestChoice = minMaxSearch(headNode, searchAhead)
+    # return bestChoice.game.board
 
 class MinMaxTree(object):
     def __init__(self, game):
@@ -45,10 +48,13 @@ class hexapawnGame(object):
     # static evaluation function which sets score for hexapawn game object
     # +(size * 5) if current player wins
     # -(size * 5) if opponent wins
-    # else score is current player markers - opponent player markers
+    # else score is (curr player clear markers - opponent clear markers) + 
+    #               (curr player markers - opponent markers)
     def staticEval(self):
         blackMarkers = 0
         whiteMarkers = 0
+        whiteClear = 0
+        blackClear = 0
         whiteLose = False
         blackLose = False
         rowOne = list(self.board[0])
@@ -59,27 +65,43 @@ class hexapawnGame(object):
         for i in range(self.size):
             if lastRow[i] == 'w':
                 blackLose = True #WHITE WINS
-        # loop through board and count pieces
+        # loop through board, count pieces, and add to black/white count 
+        # if marker of either color is found check if it has a clear path (QUIZ 2)
+        # if clear path add 1 point to black/white clear count
         for i in range(self.size):
             for j in range(self.size):
                 if (self.board[i][j] == 'b'):
                     blackMarkers += 1
+                    ## NEW PART OF STATIC EVAL
+                    clear = True
+                    for k in range(0,i):
+                        if(self.board[k][j] != '-'):
+                            clear = False
+                    if (clear == True):
+                        blackClear += 1
                 if (self.board[i][j] == 'w'):
                     whiteMarkers += 1
+                    clear = True
+                    for k in range(i + 1,self.size):
+                        if(self.board[k][j] != '-'):
+                            clear = False
+                    if (clear):
+                        whiteClear += 1
+        # Set scores according to above calculations
         if (self.player == 'w'):
             if(whiteLose):
                 self.score = int(self.size)*(-5)
             elif (blackLose):
                 self.score =  int(self.size)*5
             else:
-                self.score = int(whiteMarkers - blackMarkers)
+                self.score = int(whiteClear - blackClear) + int(whiteMarkers - blackMarkers) 
         else:
             if (blackLose):
                 self.score =  int(self.size)*(-5)
             elif (whiteLose):
                 self.score =  int(self.size)*5
             else:
-                self.score = int(blackMarkers - whiteMarkers)
+                self.score = int(blackClear - whiteClear) + int(blackMarkers - whiteMarkers)
         return self.score
 
     # For debugging
@@ -87,6 +109,7 @@ class hexapawnGame(object):
         print("next player:", self.curr)
         for i in range(self.size):
             print(self.board[i])
+        print("score:",self.score)
     
 # move generator
 # uses helper functions to find all current player markers on board then all states for those markers
@@ -111,8 +134,9 @@ def minMaxSearch(head, searchAhead):
         head.children[i].game.printBoard()
     if (head.game.searchLevel < searchAhead - 1):
         print("in if minmax")
-        for i in range(len(head.children)):
-            minMaxSearch(head.children[i], searchAhead)
+        if(head.children != []):
+            for i in range(len(head.children)):
+                minMaxSearch(head.children[i], searchAhead)
 
     print(head.level, "is head at search Level", head.game.searchLevel)
     if(head.level == 'MAX'):
