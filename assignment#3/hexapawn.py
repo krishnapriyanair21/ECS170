@@ -1,8 +1,23 @@
+### TO DO: 
+# Remove print statements (printBoard)
+# Add main function line numbers in top comment section
+# test with bigger boards
+# test with no possible movements with bigger board (size 5+)
+
+
 ## Defaults to white plays first
-## How to check for stalemate 
-# stop minmax search if no children at current node
-# CLEAR CHECK NOT WORKING 
-# WRITE IT OUT
+## hexapawn game object contains input elements: board, size, player, searchLevels
+## also contains score for each board and current player
+## Static eval function in hexapawnGame object: automatically sets a value for each board 
+## which if overwrited in MinMax Search for higher levels
+
+## MinMaxTree object contains: parent, children array, MAX/MIN level and hexapawn game object 
+
+## Functions in rubric:
+# minmaxSearch: line ___
+# moveGenerator: line___
+# staticEval: line ___
+
 
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
@@ -27,6 +42,7 @@ class MinMaxTree(object):
         self.children.append(child)
         child.parent = self
     
+    # Sets each max min game level based on parent
     def setMinOrMax(self):
         if (self.parent):
             if(self.parent.level == 'MAX'):
@@ -34,7 +50,10 @@ class MinMaxTree(object):
             else:
                 self.level = 'MAX'
         else: # first level is None -> auto set to MAX
-            self.level = 'MAX'
+            if (self.game.player == self.game.curr):
+                self.level = 'MAX' # player is white
+            else:
+                self.level = 'MIN' # player is black (white is MIN)
 
         
 class hexapawnGame(object):
@@ -44,15 +63,15 @@ class hexapawnGame(object):
         self.player = player # which player we are (INPUT)
         self.searchAhead = searchAhead # how far search ahead (INPUT)
         self.score = self.staticEval() # evaluation function (Will change for higher levels of tree; func used for simplicity)
-        self.curr = 'w' # curr player (default to w)
+        self.curr = player # curr player 
         self.searchLevel = 0 # level of tree (altered in createMinMaxTree)
         
-    # static evaluation function which sets score for hexapawn game object
+    # static evaluation function which sets score for hexapawn game object (taken from quiz 2)
     # +(size * 5) if current player wins
     # -(size * 5) if opponent wins
     # else score is (curr player clear markers - opponent clear markers) + 
     #               (curr player markers - opponent markers)
-    # points for stalemate condition added in minMaxSearch
+    # points for stalemate condition (win or lose if no possible states) done in whiteStates and blackStates
     def staticEval(self):
         blackMarkers = 0
         whiteMarkers = 0
@@ -68,8 +87,8 @@ class hexapawnGame(object):
         for i in range(self.size):
             if lastRow[i] == 'w':
                 blackLose = True #WHITE WINS
+
         # loop through board, count pieces, and add to black/white count 
-        # if marker of either color is found check if it has a clear path (QUIZ 2)
         # if clear path add 1 point to black/white clear count
         for i in range(self.size):
             for j in range(self.size):
@@ -133,8 +152,6 @@ def moveGenerator(currGame):
 # returns node with min score if parent is min
 def minMaxSearch(head, searchAhead):
     ## if searchLevel != 0 then call minMax with children 
-    for i in range(len(head.children)):
-        head.children[i].game.printBoard()
     if (head.game.searchLevel < searchAhead - 1):
         print("in if minmax")
         if(head.children != []):
@@ -144,7 +161,7 @@ def minMaxSearch(head, searchAhead):
                 if (head.children[i].game.score == int(head.children[i].game.size)*(5)):
                     break  # winning board no more games
                 minMaxSearch(head.children[i], searchAhead)
-        else:
+        else: # No possible game states on first call 
             return 
     print(head.level, "is head at search Level", head.game.searchLevel)
     if(head.level == 'MAX'):
@@ -157,6 +174,7 @@ def minMaxSearch(head, searchAhead):
                 maxVal = head.children[i].game.score
         head.game.score = maxGame.game.score
         print("max score is", head.game.score)
+        head.children.clear() ## remove list after searched
         return maxGame
     if(head.level == 'MIN'):
         minVal = head.game.size*(5)
@@ -168,6 +186,7 @@ def minMaxSearch(head, searchAhead):
                 minVal = head.children[i].game.score
         head.game.score = minGame.game.score
         print("min score is", head.game.score)
+        head.children.clear() ## remove list after searched
         return minGame
 
 # creates the tree with all possible children
