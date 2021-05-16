@@ -1,23 +1,13 @@
-### TO DO: 
-# Remove print statements (printBoard)
-# Add main function line numbers in top comment section
-# test with bigger boards
-# test with no possible movements with bigger board (size 5+)
-
-
-## Defaults to white plays first
-## hexapawn game object contains input elements: board, size, player, searchLevels
-## also contains score for each board and current player
+## hexapawnGame object contains input elements: board, size, player, searchLevels
+##                                              also contains score for each board and current player
 ## Static eval function in hexapawnGame object: automatically sets a value for each board 
-## which if overwrited in MinMax Search for higher levels
-
+##                                              which if overwrited in MinMax Search for higher levels
 ## MinMaxTree object contains: parent, children array, MAX/MIN level and hexapawn game object 
 
 ## Functions in rubric:
-# minmaxSearch: line ___
-# moveGenerator: line___
-# staticEval: line ___
-
+# minmaxSearch: line 137
+# moveGenerator: line 122
+# staticEval: line 61
 
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
@@ -28,7 +18,7 @@ def hexapawn(board, boardSize, player, searchAhead):
     if (bestChoice):
         return bestChoice.game.board
     else:
-        return("no possible moves")
+        return(init.board)
 
 class MinMaxTree(object):
     def __init__(self, game):
@@ -50,12 +40,8 @@ class MinMaxTree(object):
             else:
                 self.level = 'MAX'
         else: # first level is None -> auto set to MAX
-            if (self.game.player == self.game.curr):
-                self.level = 'MAX' # player is white
-            else:
-                self.level = 'MIN' # player is black (white is MIN)
+            self.level = 'MAX'
 
-        
 class hexapawnGame(object):
     def __init__(self, board, size, player, searchAhead):
         self.board = board # game board (INPUT)
@@ -144,13 +130,13 @@ def moveGenerator(currGame):
 
 
 # minimax search
+# uses tree created in createMinMax Tree: all possible states for provided depth
 # recursively calls minmax until reaching last "row" of tree
 # returns node with max score if parent is max
 # returns node with min score if parent is min
 def minMaxSearch(head, searchAhead):
     ## if searchLevel != 0 then call minMax with children 
     if (head.game.searchLevel < searchAhead - 1):
-        print("in if minmax")
         if(head.children != []):
             for i in range(len(head.children)):
                 if (head.children[i].game.score == int(head.children[i].game.size)*(-5)):
@@ -160,17 +146,14 @@ def minMaxSearch(head, searchAhead):
                 minMaxSearch(head.children[i], searchAhead)
         else: # No possible game states on first call 
             return 
-    print(head.level, "is head at search Level", head.game.searchLevel)
     if(head.level == 'MAX'):
         maxVal = head.game.size*(-5)
         maxGame = head.children[0]
         for i in range(len(head.children)):
             if (head.children[i].game.score > maxVal):
-                print(head.children[i].game.score, " >", maxVal)
                 maxGame = head.children[i]
                 maxVal = head.children[i].game.score
         head.game.score = maxGame.game.score
-        print("max score is", head.game.score)
         head.children.clear() ## remove list after searched
         return maxGame
     if(head.level == 'MIN'):
@@ -178,17 +161,15 @@ def minMaxSearch(head, searchAhead):
         minGame = head.children[0]
         for i in range(len(head.children)):
             if(head.children[i].game.score < minVal):
-                print(head.children[i].game.score, "<", minVal)
                 minGame = head.children[i]
                 minVal = head.children[i].game.score
         head.game.score = minGame.game.score
-        print("min score is", head.game.score)
         head.children.clear() ## remove list after searched
         return minGame
 
-# creates the tree with all possible children
+# creates the tree with all possible children 
 # recursive call using searchAhead input
-# returns root of tree to MinMaxSearch
+# returns root of tree to main
 def createMinMaxTree(head):
     if(head.game.searchAhead > 0):
         nextLevel = moveGenerator(head.game)
