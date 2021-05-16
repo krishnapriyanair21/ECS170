@@ -6,12 +6,14 @@
 
 def hexapawn(board, boardSize, player, searchAhead):
     init = hexapawnGame(board, boardSize, player, searchAhead)
-    init.printBoard()
-    # head = MinMaxTree(init)
-    # head.setMinOrMax()
-    # headNode = createMinMaxTree(head)
-    # bestChoice = minMaxSearch(headNode, searchAhead)
-    # return bestChoice.game.board
+    head = MinMaxTree(init)
+    head.setMinOrMax()
+    headNode = createMinMaxTree(head)
+    bestChoice = minMaxSearch(headNode, searchAhead)
+    if (bestChoice):
+        return bestChoice.game.board
+    else:
+        return("no possible moves")
 
 class MinMaxTree(object):
     def __init__(self, game):
@@ -50,6 +52,7 @@ class hexapawnGame(object):
     # -(size * 5) if opponent wins
     # else score is (curr player clear markers - opponent clear markers) + 
     #               (curr player markers - opponent markers)
+    # points for stalemate condition added in minMaxSearch
     def staticEval(self):
         blackMarkers = 0
         whiteMarkers = 0
@@ -136,8 +139,13 @@ def minMaxSearch(head, searchAhead):
         print("in if minmax")
         if(head.children != []):
             for i in range(len(head.children)):
+                if (head.children[i].game.score == int(head.children[i].game.size)*(-5)):
+                    break # losing board no more games
+                if (head.children[i].game.score == int(head.children[i].game.size)*(5)):
+                    break  # winning board no more games
                 minMaxSearch(head.children[i], searchAhead)
-
+        else:
+            return 
     print(head.level, "is head at search Level", head.game.searchLevel)
     if(head.level == 'MAX'):
         maxVal = head.game.size*(-5)
@@ -201,6 +209,11 @@ def whiteStates(white,currGame):
             leftHex = hexapawnGame(left,currGame.size,currGame.player,currGame.searchAhead)
             leftHex.curr = 'b'
             possibleStates.append(leftHex)
+    if (possibleStates == []):
+        if (currGame.curr == currGame.player):
+            currGame.score = int(currGame.size)*(-5)
+        else:
+            currGame.score = int(currGame.size)*(5)
     return possibleStates
 
 
@@ -225,6 +238,11 @@ def blackStates(black,currGame):
             leftHex = hexapawnGame(left,currGame.size,currGame.player,currGame.searchAhead)
             leftHex.curr = 'w'
             possibleStates.append(leftHex)
+    if (possibleStates == []):
+        if (currGame.curr == currGame.player):
+            currGame.score = int(currGame.size)*(-5)
+        else:
+            currGame.score = int(currGame.size)*(5)
     return possibleStates
 
 ## Finds all white/black markers on the board
