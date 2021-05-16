@@ -73,12 +73,8 @@ class hexapawnGame(object):
     #               (curr player markers - opponent markers)
     # points for stalemate condition (win or lose if no possible states) done in whiteStates and blackStates
     def staticEval(self):
-        blackMarkers = 0
-        whiteMarkers = 0
-        whiteClear = 0
-        blackClear = 0
-        whiteLose = False
-        blackLose = False
+        blackMarkers = whiteMarkers = whiteClear = blackClear = 0
+        whiteLose = blackLose = False
         rowOne = list(self.board[0])
         lastRow = list(self.board[self.size - 1])
         for i in range(self.size):
@@ -94,7 +90,7 @@ class hexapawnGame(object):
             for j in range(self.size):
                 if (self.board[i][j] == 'b'):
                     blackMarkers += 1
-                    ## NEW PART OF STATIC EVAL
+                    ## Find clear paths
                     clear = True
                     for k in range(0,i):
                         if(self.board[k][j] != '-'):
@@ -103,6 +99,7 @@ class hexapawnGame(object):
                         blackClear += 1
                 if (self.board[i][j] == 'w'):
                     whiteMarkers += 1
+                    ## Find clear paths
                     clear = True
                     for k in range(i + 1,self.size):
                         if(self.board[k][j] != '-'):
