@@ -4,11 +4,12 @@ def perceptron(threshold, adjustment, weights, examples, passNum):
     print("Threshold:",threshold, "Adjustment:",adjustment)
 
     for currPass in range(passNum): # loop for passNum
-        print("\nPass", currPass + 1,"\n")
+        print("\nPass", currPass + 1)
+        print()
         for example in examples:
             answer = example[0] # pull actual answer
             input = example[1] # pull input list
-            print("inputs: ", input)
+            print("inputs:", input)
             prediction = checkExample(threshold, input, weights) # returns bool prediction
             print("prediction:",prediction,"answer:", answer) 
             if (prediction != answer):
